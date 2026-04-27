@@ -3,6 +3,7 @@ package runtime
 import (
 	"Mellow/ast"
 	"Mellow/scheduler"
+	"fmt"
 )
 
 type Runtime struct {
@@ -29,11 +30,11 @@ func (r *Runtime) Run() {
 	for {
 		prog := <-r.reload
 
-		if r.sch != nil {
-			r.sch.Stop()
+		sch, err := scheduler.New()
+		if err != nil {
+			fmt.Println("Audio init err:", err)
+			continue
 		}
-
-		sch := scheduler.New()
 
 		for _, st := range prog.Statements {
 			switch s := st.(type) {
@@ -42,8 +43,11 @@ func (r *Runtime) Run() {
 			}
 		}
 
+		if r.sch != nil {
+			r.sch.Stop()
+		}
+
 		r.sch = sch
 		go r.sch.Run()
 	}
 }
-

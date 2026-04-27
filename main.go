@@ -24,7 +24,6 @@ func load(rt *runtime.Runtime, file string) {
 		return
 	}
 
-	fmt.Println("Reloading...")
 	rt.Load(pf)
 }
 
@@ -37,7 +36,8 @@ func main() {
 	file := os.Args[1]
 	abs, err := filepath.Abs(file)
 	if err != nil {
-		panic(err)
+		fmt.Println("Path err:", err)
+		return
 	}
 
 	rt := runtime.New()
@@ -47,13 +47,15 @@ func main() {
 
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
-		panic(err)
+		fmt.Println("Watcher init err:", err)
+		return
 	}
 	defer watcher.Close()
 
 	dir := filepath.Dir(abs)
 	if err := watcher.Add(dir); err != nil {
-		panic(err)
+		fmt.Println("Watcher add err:", err)
+		return
 	}
 
 	go func() {
@@ -72,4 +74,3 @@ func main() {
 
 	select {}
 }
-

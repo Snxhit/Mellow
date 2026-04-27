@@ -1,15 +1,17 @@
 package scheduler
 
 import (
-	"fmt"
 	"sync"
 	"time"
+
+	"Mellow/audio"
 )
 
 type Scheduler struct {
 	loops []Loop
 	stop  chan struct{}
 	once  sync.Once
+	audio *audio.Engine
 }
 
 type Loop struct {
@@ -17,13 +19,22 @@ type Loop struct {
 	Interval time.Duration
 }
 
-func New() *Scheduler {
-	return &Scheduler{
-		stop: make(chan struct{}),
+func New() (*Scheduler, error) {
+	a, err := audio.New()
+	if err != nil {
+		return nil, err
 	}
+
+	return &Scheduler{
+		stop:  make(chan struct{}),
+		audio: a,
+	}, nil
 }
 
 func (s *Scheduler) AddLoop(note string, intervalMS int) {
+	if intervalMS <= 0 {
+		return
+	}
 	s.loops = append(s.loops, Loop{
 		Note:     note,
 		Interval: time.Duration(intervalMS) * time.Millisecond,
@@ -52,16 +63,21 @@ func (s *Scheduler) Stop() {
 }
 
 func (s *Scheduler) runLoop(l Loop) {
+	if l.Interval <= 0 {
+		return
+	}
+
 	ticker := time.NewTicker(l.Interval)
 	defer ticker.Stop()
 
 	for {
 		select {
 		case <-ticker.C:
-			fmt.Println("PLAY:", l.Note)
+			if freq, ok := audio.Notes[l.Note]; ok {
+				s.audio.Play(freq)
+			}
 		case <-s.stop:
 			return
 		}
 	}
 }
-
