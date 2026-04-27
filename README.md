@@ -1,7 +1,14 @@
-# Mellow
+<div align="center">
+  <h1>Mellow</h1>
+  <img src="https://res.cloudinary.com/dp7g5aflo/image/upload/v1777310046/mellow_banner_1024-768_w1vjrq.png">
+  Mellow is a programming language that can be used to create music on the fly.
+  
+  ![Time Tracking](https://img.shields.io/badge/Mellow-2h%2049m-critical?logo=neovim&style=plastic)
+  ![GitHub Stars](https://img.shields.io/github/stars/Snxhit/Mellow?style=plastic)
+  ![GitHub Forks](https://img.shields.io/github/forks/Snxhit/Mellow?style=plastic)
+  ![GitHub Issues](https://img.shields.io/github/issues/Snxhit/Mellow?style=plastic)
 
-Mellow is a programming language that can be used to create music on the fly.
-Written in Go.
+</div>
 
 ## Status
 
