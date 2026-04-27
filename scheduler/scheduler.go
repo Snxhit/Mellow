@@ -1,6 +1,7 @@
 package scheduler
 
 import (
+	"fmt"
 	"sync"
 	"time"
 
@@ -74,6 +75,7 @@ func (s *Scheduler) runLoop(l Loop) {
 		select {
 		case <-ticker.C:
 			if freq, ok := audio.Notes[l.Note]; ok {
+				fmt.Println("Played key:", l.Note)
 				s.audio.Play(freq)
 			}
 		case <-s.stop:
